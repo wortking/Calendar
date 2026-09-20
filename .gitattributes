@@ -1,0 +1,3 @@
+# Los scripts que corren dentro de los contenedores Linux (Railway) no
+# pueden tener finales de línea CRLF, o "bad interpreter" al arrancar.
+*.sh text eol=lf

@@ -6,3 +6,6 @@
 Thumbs.db
 .vscode/
 .idea/
+
+# Secretos de producción generados para el deploy (Railway) - nunca a git.
+RAILWAY_SECRETS.txt

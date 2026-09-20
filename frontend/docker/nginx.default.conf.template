@@ -1,0 +1,29 @@
+server {
+    listen ${PORT};
+    server_name _;
+    root /usr/share/nginx/html;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # SPA: cualquier ruta que no sea un archivo real cae en index.html para
+    # que React Router la resuelva del lado del cliente (evita 404 al
+    # recargar /dashboard, /admin/users, etc.).
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # El service worker de la PWA no debe quedar cacheado por el navegador
+    # ni por un proxy/CDN intermedio: si no, un deploy nuevo puede tardar en
+    # notarse.
+    location = /sw.js {
+        add_header Cache-Control "no-cache";
+        try_files $uri =404;
+    }
+
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}

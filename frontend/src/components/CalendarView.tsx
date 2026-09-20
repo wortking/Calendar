@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import FullCalendar, { type CalendarRef, type DatesSetInfo } from '@fullcalendar/react'
+import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -90,7 +90,7 @@ export function CalendarView({ onActiveDateChange }: { onActiveDateChange?: (dat
   // internamente. En mobile no hay altura fija disponible, así que se
   // mantiene el comportamiento de siempre (altura según contenido).
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
-  const calendarRef = useRef<CalendarRef>(null)
+  const calendarRef = useRef<InstanceType<typeof FullCalendar>>(null)
   const { token, user } = useAuth()
   const queryClient = useQueryClient()
   const [dragError, setDragError] = useState<string | null>(null)
@@ -326,6 +326,19 @@ export function CalendarView({ onActiveDateChange }: { onActiveDateChange?: (dat
     calendarRef.current?.getApi().unselect()
   }
 
+  // Ver el comentario de handleEventDrop más arriba: se tipa desde las
+  // props del propio <FullCalendar> para sortear el desfasaje de tipos
+  // entre @fullcalendar/react y @fullcalendar/core.
+  const handleDatesSet: NonNullable<React.ComponentProps<typeof FullCalendar>['datesSet']> = (info) => {
+    // Solo en vista de día el rango visible ES el día que interesa. Al pasar
+    // a semana/mes, currentStart cae en el lunes o el día 1 del mes: seguir
+    // ese valor haría que "Turnos del día" saltara a esa fecha en vez de
+    // quedarse en el día que se estaba mirando.
+    if (info.view.type === 'timeGridDay') {
+      onActiveDateChange?.(toLocalDateIso(info.view.currentStart))
+    }
+  }
+
   return (
     <Paper
       elevation={0}
@@ -358,15 +371,7 @@ export function CalendarView({ onActiveDateChange }: { onActiveDateChange?: (dat
           center: 'title',
           right: 'zoomOut,zoomIn timeGridDay,timeGridWeek,dayGridMonth',
         }}
-        datesSet={(info: DatesSetInfo) => {
-          // Solo en vista de día el rango visible ES el día que interesa. Al
-          // pasar a semana/mes, currentStart cae en el lunes o el día 1 del
-          // mes: seguir ese valor haría que "Turnos del día" saltara a esa
-          // fecha en vez de quedarse en el día que se estaba mirando.
-          if (info.view.type === 'timeGridDay') {
-            onActiveDateChange?.(toLocalDateIso(info.view.currentStart))
-          }
-        }}
+        datesSet={handleDatesSet}
         slotMinTime={slotMinTime}
         slotMaxTime={slotMaxTime}
         slotDuration={slotDuration}

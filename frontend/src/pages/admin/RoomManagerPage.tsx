@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import FullCalendar, { type CalendarRef, type DatesSetInfo } from '@fullcalendar/react'
+import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -67,7 +67,7 @@ export function RoomManagerPage() {
   useRequireStaff()
   const { token, user } = useAuth()
   const queryClient = useQueryClient()
-  const calendarRef = useRef<CalendarRef>(null)
+  const calendarRef = useRef<InstanceType<typeof FullCalendar>>(null)
   const isAdmin = user?.roles.includes('ROLE_ADMIN')
 
   const [selectedCompanyId, setSelectedCompanyId] = useState('')
@@ -225,7 +225,7 @@ export function RoomManagerPage() {
   // "Actividades del día" no sigue al calendario al pasar a semana/mes (solo
   // se actualiza al navegar en vista de día), mismo criterio que "Turnos
   // del día" en el calendario principal.
-  const handleDatesSet = (info: DatesSetInfo) => {
+  const handleDatesSet: NonNullable<React.ComponentProps<typeof FullCalendar>['datesSet']> = (info) => {
     if (info.view.type === 'timeGridDay') {
       setActiveDate(toLocalDateIso(info.view.currentStart))
     }

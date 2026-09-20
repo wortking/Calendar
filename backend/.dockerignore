@@ -1,0 +1,7 @@
+var/
+vendor/
+config/jwt/*.pem
+.env.local
+.env.*.local
+.git
+.phpunit.cache/
