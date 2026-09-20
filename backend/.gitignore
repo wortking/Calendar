@@ -1,0 +1,25 @@
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+# Avatares subidos por los usuarios: la carpeta se versiona (.gitkeep) pero
+# no su contenido, para que exista en cualquier clon/deploy sin arrastrar
+# imágenes de usuarios reales.
+/public/uploads/avatars/*
+!/public/uploads/avatars/.gitkeep

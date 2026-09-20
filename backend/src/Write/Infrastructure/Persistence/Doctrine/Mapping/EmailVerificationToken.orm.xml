@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Write\Domain\Model\EmailVerificationToken" table="email_verification_tokens">
+        <id name="id" type="uuid" />
+        <field name="userId" type="uuid" column="user_id" />
+        <field name="tokenHash" type="string" length="64" column="token_hash" />
+        <field name="expiresAt" type="datetime_immutable" column="expires_at" />
+        <field name="usedAt" type="datetime_immutable" nullable="true" column="used_at" />
+
+        <indexes>
+            <index name="idx_email_verification_tokens_user_id" columns="user_id" />
+            <index name="idx_email_verification_tokens_token_hash" columns="token_hash" />
+        </indexes>
+    </entity>
+
+</doctrine-mapping>

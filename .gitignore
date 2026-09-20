@@ -1,0 +1,8 @@
+# Estado local de Claude Code (no es parte del proyecto)
+.claude/
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

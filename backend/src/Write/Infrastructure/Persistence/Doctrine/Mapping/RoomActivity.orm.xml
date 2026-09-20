@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Write\Domain\Model\RoomActivity" table="room_activities">
+        <id name="id" type="uuid" />
+        <field name="roomId" type="uuid" column="room_id" />
+        <field name="activityTypeId" type="uuid" column="activity_type_id" />
+        <field name="userId" type="uuid" column="user_id" />
+        <field name="startAt" type="datetime_immutable" column="start_at" />
+        <field name="endAt" type="datetime_immutable" column="end_at" />
+
+        <indexes>
+            <index name="idx_room_activities_room_id" columns="room_id" />
+            <index name="idx_room_activities_user_id" columns="user_id" />
+            <index name="idx_room_activities_start_at" columns="start_at" />
+        </indexes>
+    </entity>
+
+</doctrine-mapping>

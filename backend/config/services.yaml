@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+# See also https://symfony.com/doc/current/service_container/import.html
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/Write/Domain/Model/'
+            - '../src/Write/Domain/Event/'
+            - '../src/Read/Domain/Model/'
+            - '../src/Write/Application/UseCase/**/*Command.php'
+            - '../src/Write/Application/UseCase/**/*Response.php'
+            - '../src/Read/Application/Query/**/*Query.php'
+            - '../src/Read/Application/Query/**/*Response.php'
+            - '../src/Read/Application/Query/**/*View.php'
+
+    # Mapeo explícito de Puertos a Adaptadores — Contexto de Escritura
+    App\Write\Domain\Repository\UserWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineUserWriteRepository'
+    App\Write\Domain\Repository\UserImageWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineUserImageWriteRepository'
+    App\Write\Domain\Repository\RoleAssignmentWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineRoleAssignmentWriteRepository'
+    App\Write\Domain\Repository\PasswordResetTokenWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrinePasswordResetTokenWriteRepository'
+    App\Write\Domain\Repository\EmailVerificationTokenWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineEmailVerificationTokenWriteRepository'
+    App\Write\Domain\Repository\RefreshTokenWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineRefreshTokenWriteRepository'
+    App\Write\Domain\Repository\RoleWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineRoleWriteRepository'
+    App\Write\Domain\Repository\PermissionWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrinePermissionWriteRepository'
+    App\Write\Domain\Repository\RolePermissionWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineRolePermissionWriteRepository'
+    App\Write\Domain\Repository\DepartmentWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineDepartmentWriteRepository'
+    App\Write\Domain\Repository\DepartmentAssignmentWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineDepartmentAssignmentWriteRepository'
+    App\Write\Domain\Repository\ShiftWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineShiftWriteRepository'
+    App\Write\Domain\Repository\CompanyWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineCompanyWriteRepository'
+    App\Write\Domain\Repository\ActivityTypeWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineActivityTypeWriteRepository'
+    App\Write\Domain\Repository\RoomWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineRoomWriteRepository'
+    App\Write\Domain\Repository\RoomActivityWriteRepositoryInterface: '@App\Write\Infrastructure\Repository\DoctrineRoomActivityWriteRepository'
+
+    # Mapeo explícito de Puertos a Adaptadores — Contexto de Lectura
+    App\Read\Domain\Repository\UserReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineUserReadRepository'
+    App\Read\Domain\Repository\RoleReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineRoleReadRepository'
+    App\Read\Domain\Repository\RoleAssignmentReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineRoleAssignmentReadRepository'
+    App\Read\Domain\Repository\PermissionReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrinePermissionReadRepository'
+    App\Read\Domain\Repository\UserImageReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineUserImageReadRepository'
+    App\Read\Domain\Repository\DepartmentReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineDepartmentReadRepository'
+    App\Read\Domain\Repository\DepartmentAssignmentReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineDepartmentAssignmentReadRepository'
+    App\Read\Domain\Repository\ShiftReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineShiftReadRepository'
+    App\Read\Domain\Repository\CompanyReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineCompanyReadRepository'
+    App\Read\Domain\Repository\ActivityTypeReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineActivityTypeReadRepository'
+    App\Read\Domain\Repository\RoomReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineRoomReadRepository'
+    App\Read\Domain\Repository\RoomActivityReadRepositoryInterface: '@App\Read\Infrastructure\Repository\DoctrineRoomActivityReadRepository'
+
+    # Cada grupo de repositorios Doctrine usa su propio Entity Manager,
+    # para que Write y Read no compartan metadatos de las mismas tablas.
+    App\Write\Infrastructure\Repository\:
+        resource: '../src/Write/Infrastructure/Repository/'
+        bind:
+            $entityManager: '@doctrine.orm.write_entity_manager'
+
+    App\Read\Infrastructure\Repository\:
+        resource: '../src/Read/Infrastructure/Repository/'
+        bind:
+            $entityManager: '@doctrine.orm.read_entity_manager'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones

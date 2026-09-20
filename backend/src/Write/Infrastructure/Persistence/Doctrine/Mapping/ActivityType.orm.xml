@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Write\Domain\Model\ActivityType" table="activity_types">
+        <id name="id" type="uuid" />
+        <field name="departmentId" type="uuid" column="department_id" />
+        <field name="name" type="string" length="255" />
+        <field name="color" type="string" length="7" nullable="true" />
+
+        <unique-constraints>
+            <unique-constraint name="uniq_activity_types_department_name" columns="department_id,name" />
+        </unique-constraints>
+        <indexes>
+            <index name="idx_activity_types_department_id" columns="department_id" />
+        </indexes>
+    </entity>
+
+</doctrine-mapping>

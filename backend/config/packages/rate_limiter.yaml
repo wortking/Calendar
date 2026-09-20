@@ -1,0 +1,37 @@
+framework:
+    rate_limiter:
+        forgot_password:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '15 minutes'
+            cache_pool: cache.app
+        reset_password:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+            cache_pool: cache.app
+        refresh_token:
+            policy: 'sliding_window'
+            limit: 20
+            interval: '15 minutes'
+            cache_pool: cache.app
+        register:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '15 minutes'
+            cache_pool: cache.app
+        verify_email:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '15 minutes'
+            cache_pool: cache.app
+        resend_verification_email:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '15 minutes'
+            cache_pool: cache.app
+        upload_avatar:
+            policy: 'sliding_window'
+            limit: 10
+            interval: '15 minutes'
+            cache_pool: cache.app
